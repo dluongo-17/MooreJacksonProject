@@ -372,6 +372,7 @@ async function loadRaster() {
   });
 
   rasterLayer.addTo(map);
+  console.log('Raster bounds:', rasterLayer.getBounds());
 
   // Constrain map to raster bounds
   const bounds = rasterLayer.getBounds();
