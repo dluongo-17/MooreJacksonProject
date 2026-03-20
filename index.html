@@ -261,7 +261,7 @@ function buildPopupContent(feature, layerRef) {
       <h3>🌳 Tree</h3>
       <div id="attr-view">
         ${rows}
-        ${canEdit ? `<button class="edit-btn" onclick="toggleEdit(this)">Edit attributes</button>` : ''}
+        ${canEdit ? `<button class="edit-btn" onclick="toggleEdit(this)">Edit</button>` : ''}
       </div>
       ${canEdit ? `
       <div class="edit-form" id="edit-form" style="display:none">
@@ -274,7 +274,7 @@ function buildPopupContent(feature, layerRef) {
 window.toggleEdit = function(btn) {
   const form = btn.closest('.tree-popup').querySelector('#edit-form');
   form.style.display = form.style.display === 'none' ? 'block' : 'none';
-  btn.textContent = form.style.display === 'none' ? 'Edit attributes' : 'Cancel';
+  btn.textContent = form.style.display === 'none' ? 'Edit' : 'Cancel';
 };
 
 window.saveEdit = function(btn) {
@@ -299,7 +299,7 @@ window.saveEdit = function(btn) {
     popup.querySelector(`#val-${key}`).textContent = inp.value || '—';
   });
   popup.querySelector('#edit-form').style.display = 'none';
-  popup.querySelector('.edit-btn').textContent = 'Edit attributes';
+  popup.querySelector('.edit-btn').textContent = 'Edit';
 };
 
 /** Render (or re-render) the tree layer from current geojsonData */
