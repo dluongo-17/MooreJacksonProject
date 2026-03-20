@@ -378,6 +378,7 @@ async function loadRaster() {
   const bounds = rasterLayer.getBounds();
   map.fitBounds(bounds);
   map.setMaxBounds(bounds.pad(0.05));
+  map.setMinZoom(map.getZoom());
 
   return bounds;
 }
