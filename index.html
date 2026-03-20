@@ -18,9 +18,9 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      font-family: "Helvetica Neue", Arial, sans-serif;
-      background: #45a339;
-      color: #e0fac8;
+      font-family: 'Georgia', serif;
+      background: #0d1f0e;
+      color: #d4e8c2;
       height: 100vh;
       display: flex;
       flex-direction: column;
@@ -32,7 +32,7 @@
       align-items: center;
       justify-content: space-between;
       padding: 10px 20px;
-      background: #45a339;
+      background: #0d1f0e;
       border-bottom: 1px solid #2a4d1e;
       flex-shrink: 0;
       z-index: 1000;
@@ -61,38 +61,27 @@
     #map {
       width: 100%;
       height: 100%;
-      background: #45a339 !important;
+      background: #0d1f0e !important;
     }
 
-    /* Remove default Leaflet tile pane background */
     .leaflet-container {
-      background: #45a339 !important;
+      background: #0d1f0e !important;
     }
 
     /* ── Popup / Tooltip styling ── */
     .leaflet-popup-content-wrapper {
-      background: #45a339;
+      background: #0e2010;
       border: 1px solid #3a6b28;
       border-radius: 4px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.6);
       color: #d4e8c2;
     }
-    .leaflet-popup-tip { background: ##45a339; }
+    .leaflet-popup-tip { background: #0e2010; }
     .leaflet-popup-close-button { color: #8fc96e !important; }
 
     .tree-popup {
       min-width: 200px;
       font-family: 'Georgia', serif;
-    }
-    .tree-popup h3 {
-      font-size: 0.85rem;
-      font-weight: normal;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: #8fc96e;
-      margin-bottom: 8px;
-      border-bottom: 1px solid #2a4d1e;
-      padding-bottom: 6px;
     }
     .tree-popup .attr-row {
       display: flex;
@@ -128,7 +117,7 @@
       border-radius: 3px;
       transition: background 0.2s;
     }
-    .tree-popup .edit-btn:hover { background: #45a339; }
+    .tree-popup .edit-btn:hover { background: #1a3a14; }
 
     .tree-popup .edit-form { margin-top: 8px; }
     .tree-popup .edit-form label {
@@ -141,7 +130,7 @@
     }
     .tree-popup .edit-form input {
       width: 100%;
-      background: #45a339;
+      background: #0a1a0c;
       border: 1px solid #2a4d1e;
       color: #d4e8c2;
       padding: 4px 6px;
@@ -155,7 +144,7 @@
       margin-top: 8px;
       width: 100%;
       padding: 5px 0;
-      background: #45a339;
+      background: #1e4d14;
       border: 1px solid #3a6b28;
       color: #aee08c;
       font-family: inherit;
@@ -166,11 +155,39 @@
       border-radius: 3px;
       transition: background 0.2s;
     }
-    .tree-popup .save-btn:hover { background: ##45a339; }
+    .tree-popup .save-btn:hover { background: #27601a; }
+
+    /* Loading overlay */
+    #loading {
+      position: absolute;
+      inset: 0;
+      background: #0d1f0e;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      gap: 14px;
+    }
+    #loading p {
+      font-size: 0.8rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #5a7a4a;
+    }
+    .spinner {
+      width: 32px;
+      height: 32px;
+      border: 2px solid #1a3a14;
+      border-top-color: #5a9a3a;
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
     /* Tooltip on hover */
     .leaflet-tooltip {
-      background: #45a339;
+      background: #0e2010;
       border: 1px solid #3a6b28;
       color: #d4e8c2;
       font-family: 'Georgia', serif;
@@ -190,7 +207,7 @@
     <p>Satellite imagery · Tree inventory</p>
   </div>
   <p style="font-size:0.68rem; color:#3a5a2a; text-align:right;">
-    Click a tree to view &amp; edit <br>
+    Click a tree to view &amp; edit<br>
   </p>
 </header>
 
@@ -229,15 +246,14 @@ const map = L.map('map', {
 // ─────────────────────────────────────────────
 // GeoJSON state (mutable – supports editing)
 // ─────────────────────────────────────────────
-let geojsonData = null;         // raw FeatureCollection
-let treeLayer   = null;         // Leaflet layer group (circles + dots)
+let geojsonData = null;
+let treeLayer   = null;
 
 // ─────────────────────────────────────────────
 // HELPERS
 // ─────────────────────────────────────────────
 
-/** Build a pretty popup for a feature, with inline editing */
-function buildPopupContent(feature, layerRef) {
+function buildPopupContent(feature) {
   const props = feature.properties || {};
   const keys  = Object.keys(props);
 
@@ -253,7 +269,6 @@ function buildPopupContent(feature, layerRef) {
     <label>${k}</label>
     <input id="inp-${k}" type="text" value="${props[k] ?? ''}" />`).join('');
 
-  // If no keys yet, add a placeholder new-field option
   const canEdit = keys.length > 0;
 
   return `
@@ -277,38 +292,32 @@ window.toggleEdit = function(btn) {
 };
 
 window.saveEdit = function(btn) {
-  const popup   = btn.closest('.tree-popup');
-  const inputs  = popup.querySelectorAll('#edit-form input');
-  // find the marker that owns this popup
+  const popup  = btn.closest('.tree-popup');
+  const inputs = popup.querySelectorAll('#edit-form input');
   map.eachLayer(layer => {
-    if (layer.getPopup && layer.getPopup() && layer.getPopup().getContent &&
-        layer.getPopup().getElement && layer.getPopup().getElement()?.contains(btn)) {
+    if (layer.getPopup && layer.getPopup() && layer.getPopup().getElement &&
+        layer.getPopup().getElement()?.contains(btn)) {
       inputs.forEach(inp => {
         const key = inp.id.replace('inp-', '');
         layer.feature.properties[key] = inp.value;
-        const span = popup.querySelector(`#val-${key}`);
-        if (span) span.textContent = inp.value || '—';
       });
     }
   });
-  // also update geojsonData
-  // (the layer reference is captured in the closure below via renderTrees)
   inputs.forEach(inp => {
     const key = inp.id.replace('inp-', '');
-    popup.querySelector(`#val-${key}`).textContent = inp.value || '—';
+    const span = popup.querySelector(`#val-${key}`);
+    if (span) span.textContent = inp.value || '—';
   });
   popup.querySelector('#edit-form').style.display = 'none';
   popup.querySelector('.edit-btn').textContent = 'Edit';
 };
 
-/** Render (or re-render) the tree layer from current geojsonData */
 function renderTrees() {
   if (treeLayer) map.removeLayer(treeLayer);
   treeLayer = L.layerGroup();
 
   L.geoJSON(geojsonData, {
     pointToLayer: (feature, latlng) => {
-      // Buffer circle
       const circle = L.circle(latlng, {
         radius: BUFFER_RADIUS_M,
         color:  '#50c850',
@@ -317,9 +326,8 @@ function renderTrees() {
         fillColor: '#50c850',
         fillOpacity: 0.18
       });
-      circle.feature = feature;  // attach so saveEdit can mutate
+      circle.feature = feature;
 
-      // Dot
       const dot = L.circleMarker(latlng, {
         radius: 4,
         color: '#50c850',
@@ -329,7 +337,6 @@ function renderTrees() {
       });
       dot.feature = feature;
 
-      // Tooltip on hover
       const label = feature.properties
         ? (feature.properties.name || feature.properties.Name ||
            feature.properties.species || feature.properties.type ||
@@ -339,20 +346,19 @@ function renderTrees() {
       dot.bindTooltip(String(label), { sticky: true });
       circle.bindTooltip(String(label), { sticky: true });
 
-      // Popup on click (shared between circle and dot)
       const popupOpts = { maxWidth: 300, autoPan: true };
-      dot.bindPopup(() => buildPopupContent(feature, dot), popupOpts);
-      circle.bindPopup(() => buildPopupContent(feature, circle), popupOpts);
+      dot.bindPopup(() => buildPopupContent(feature), popupOpts);
+      circle.bindPopup(() => buildPopupContent(feature), popupOpts);
 
       treeLayer.addLayer(circle);
       treeLayer.addLayer(dot);
 
-      return dot; // geoJSON will add dot; circle added manually above
+      return dot;
     }
   });
 
   treeLayer.addTo(map);
-};
+}
 
 // ─────────────────────────────────────────────
 // LOAD RASTER
@@ -366,14 +372,13 @@ async function loadRaster() {
   const rasterLayer = new GeoRasterLayer({
     georaster,
     opacity: 1,
-    resolution: 256,   // tile resolution; increase for quality (slower)
-    pixelValuesToColorFn: null  // use natural RGB bands if available
+    resolution: 256,
+    pixelValuesToColorFn: null
   });
 
   rasterLayer.addTo(map);
   console.log('Raster bounds:', rasterLayer.getBounds());
 
-  // Constrain map to raster bounds
   const bounds = rasterLayer.getBounds();
   map.fitBounds(bounds);
   map.setMaxBounds(bounds.pad(0.05));
