@@ -56,7 +56,6 @@
       flex: 1;
       position: relative;
       overflow: hidden;
-      transform: rotate(-195deg);
     }
 
     #map {
@@ -168,7 +167,97 @@
       transition: background 0.2s;
     }
     .tree-popup .save-btn:hover { background: #27601a; }
-    
+
+    /* Legend */
+    #legend {
+      position: absolute;
+      bottom: 20px;
+      right: 12px;
+      background: rgba(13,31,14,0.88);
+      border: 1px solid #2a4d1e;
+      border-radius: 4px;
+      padding: 10px 14px;
+      font-size: 0.72rem;
+      z-index: 900;
+      min-width: 130px;
+    }
+    #legend h4 {
+      font-weight: normal;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #8fc96e;
+      margin-bottom: 8px;
+      font-size: 0.7rem;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 5px;
+      color: #a0c080;
+    }
+    .legend-swatch {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .legend-raster {
+      width: 14px;
+      height: 14px;
+      border-radius: 2px;
+      flex-shrink: 0;
+      border: 1px solid #4a7a3a;
+    }
+
+    /* Loading overlay */
+    #loading {
+      position: absolute;
+      inset: 0;
+      background: #0d1f0e;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      gap: 14px;
+    }
+    #loading p {
+      font-size: 0.8rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #5a7a4a;
+    }
+    .spinner {
+      width: 32px;
+      height: 32px;
+      border: 2px solid #1a3a14;
+      border-top-color: #5a9a3a;
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Download button */
+    #download-btn {
+      position: absolute;
+      bottom: 20px;
+      left: 12px;
+      background: rgba(13,31,14,0.88);
+      border: 1px solid #2a4d1e;
+      border-radius: 4px;
+      padding: 7px 14px;
+      font-family: inherit;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #8fc96e;
+      cursor: pointer;
+      z-index: 900;
+      transition: background 0.2s;
+    }
+    #download-btn:hover { background: #1a3a14; }
+
     /* Tooltip on hover */
     .leaflet-tooltip {
       background: #0e2010;
@@ -203,6 +292,24 @@
   </div>
 
   <div id="map"></div>
+
+  <div id="legend">
+    <h4>Legend</h4>
+    <div class="legend-item">
+      <div class="legend-raster" style="background:#3a5a2a;"></div>
+      Satellite imagery
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:rgba(80,200,80,0.25); border:2px solid #50c850;"></div>
+      Tree (7.5 ft buffer)
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="width:8px;height:8px;background:#50c850; margin-left:3px;"></div>
+      Tree point
+    </div>
+  </div>
+
+  <button id="download-btn" onclick="downloadGeoJSON()">⬇ Export GeoJSON</button>
 </div>
 
 <script>
@@ -263,7 +370,7 @@ function buildPopupContent(feature, layerRef) {
       <h3>🌳 Tree</h3>
       <div id="attr-view">
         ${rows}
-        ${canEdit ? `<button class="edit-btn" onclick="toggleEdit(this)">Edit</button>` : ''}
+        ${canEdit ? `<button class="edit-btn" onclick="toggleEdit(this)">Edit attributes</button>` : ''}
       </div>
       ${canEdit ? `
       <div class="edit-form" id="edit-form" style="display:none">
@@ -276,7 +383,7 @@ function buildPopupContent(feature, layerRef) {
 window.toggleEdit = function(btn) {
   const form = btn.closest('.tree-popup').querySelector('#edit-form');
   form.style.display = form.style.display === 'none' ? 'block' : 'none';
-  btn.textContent = form.style.display === 'none' ? 'Edit' : 'Cancel';
+  btn.textContent = form.style.display === 'none' ? 'Edit attributes' : 'Cancel';
 };
 
 window.saveEdit = function(btn) {
@@ -301,7 +408,7 @@ window.saveEdit = function(btn) {
     popup.querySelector(`#val-${key}`).textContent = inp.value || '—';
   });
   popup.querySelector('#edit-form').style.display = 'none';
-  popup.querySelector('.edit-btn').textContent = 'Edit';
+  popup.querySelector('.edit-btn').textContent = 'Edit attributes';
 };
 
 /** Render (or re-render) the tree layer from current geojsonData */
@@ -353,7 +460,21 @@ function renderTrees() {
       return dot; // geoJSON will add dot; circle added manually above
     }
   });
+
   treeLayer.addTo(map);
+}
+
+/** Export the (possibly edited) GeoJSON */
+window.downloadGeoJSON = function() {
+  if (!geojsonData) return;
+  const blob = new Blob([JSON.stringify(geojsonData, null, 2)],
+                        { type: 'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = 'MJ_Trees_edited.geojson';
+  a.click();
+  URL.revokeObjectURL(url);
 };
 
 // ─────────────────────────────────────────────
