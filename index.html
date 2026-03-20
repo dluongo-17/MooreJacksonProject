@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MJ Garden Map</title>
+
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+
+  <!-- georaster + georaster-layer-for-leaflet for displaying GeoTIFF without a tile server -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.9.0/proj4.js"></script>
+  <script src="https://unpkg.com/georaster@1.6.0/dist/georaster.browser.bundle.js"></script>
+  <script src="https://unpkg.com/georaster-layer-for-leaflet@3.10.0/dist/georaster-layer-for-leaflet.browser.js"></script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Georgia', serif;
+      background: #0d1f0e;
+      color: #d4e8c2;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 20px;
+      background: #0d1f0e;
+      border-bottom: 1px solid #2a4d1e;
+      flex-shrink: 0;
+      z-index: 1000;
+    }
+
+    header h1 {
+      font-size: 1.1rem;
+      font-weight: normal;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #8fc96e;
+    }
+
+    header p {
+      font-size: 0.72rem;
+      color: #5a7a4a;
+      letter-spacing: 0.06em;
+    }
+
+    #map-container {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+      background: #0d1f0e !important;
+    }
+
+    /* Remove default Leaflet tile pane background */
+    .leaflet-container {
+      background: #0d1f0e !important;
+    }
+
+    /* ── Popup / Tooltip styling ── */
+    .leaflet-popup-content-wrapper {
+      background: #0e2010;
+      border: 1px solid #3a6b28;
+      border-radius: 4px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+      color: #d4e8c2;
+    }
+    .leaflet-popup-tip { background: #0e2010; }
+    .leaflet-popup-close-button { color: #8fc96e !important; }
+
+    .tree-popup {
+      min-width: 200px;
+      font-family: 'Georgia', serif;
+    }
+    .tree-popup h3 {
+      font-size: 0.85rem;
+      font-weight: normal;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #8fc96e;
+      margin-bottom: 8px;
+      border-bottom: 1px solid #2a4d1e;
+      padding-bottom: 6px;
+    }
+    .tree-popup .attr-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 3px 0;
+      font-size: 0.78rem;
+    }
+    .tree-popup .attr-key {
+      color: #6a9a52;
+      text-transform: capitalize;
+    }
+    .tree-popup .attr-val {
+      color: #c8e0b0;
+      text-align: right;
+      max-width: 160px;
+      word-break: break-word;
+    }
+
+    /* edit form inside popup */
+    .tree-popup .edit-btn {
+      margin-top: 10px;
+      width: 100%;
+      padding: 5px 0;
+      background: transparent;
+      border: 1px solid #3a6b28;
+      color: #8fc96e;
+      font-family: inherit;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 3px;
+      transition: background 0.2s;
+    }
+    .tree-popup .edit-btn:hover { background: #1a3a14; }
+
+    .tree-popup .edit-form { margin-top: 8px; }
+    .tree-popup .edit-form label {
+      display: block;
+      font-size: 0.72rem;
+      color: #6a9a52;
+      margin-top: 6px;
+      margin-bottom: 2px;
+      text-transform: capitalize;
+    }
+    .tree-popup .edit-form input {
+      width: 100%;
+      background: #0a1a0c;
+      border: 1px solid #2a4d1e;
+      color: #d4e8c2;
+      padding: 4px 6px;
+      font-family: inherit;
+      font-size: 0.78rem;
+      border-radius: 2px;
+      outline: none;
+    }
+    .tree-popup .edit-form input:focus { border-color: #5a9a3a; }
+    .tree-popup .save-btn {
+      margin-top: 8px;
+      width: 100%;
+      padding: 5px 0;
+      background: #1e4d14;
+      border: 1px solid #3a6b28;
+      color: #aee08c;
+      font-family: inherit;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 3px;
+      transition: background 0.2s;
+    }
+    .tree-popup .save-btn:hover { background: #27601a; }
+
+    /* Legend */
+    #legend {
+      position: absolute;
+      bottom: 20px;
+      right: 12px;
+      background: rgba(13,31,14,0.88);
+      border: 1px solid #2a4d1e;
+      border-radius: 4px;
+      padding: 10px 14px;
+      font-size: 0.72rem;
+      z-index: 900;
+      min-width: 130px;
+    }
+    #legend h4 {
+      font-weight: normal;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #8fc96e;
+      margin-bottom: 8px;
+      font-size: 0.7rem;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 5px;
+      color: #a0c080;
+    }
+    .legend-swatch {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .legend-raster {
+      width: 14px;
+      height: 14px;
+      border-radius: 2px;
+      flex-shrink: 0;
+      border: 1px solid #4a7a3a;
+    }
+
+    /* Loading overlay */
+    #loading {
+      position: absolute;
+      inset: 0;
+      background: #0d1f0e;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      gap: 14px;
+    }
+    #loading p {
+      font-size: 0.8rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #5a7a4a;
+    }
+    .spinner {
+      width: 32px;
+      height: 32px;
+      border: 2px solid #1a3a14;
+      border-top-color: #5a9a3a;
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Download button */
+    #download-btn {
+      position: absolute;
+      bottom: 20px;
+      left: 12px;
+      background: rgba(13,31,14,0.88);
+      border: 1px solid #2a4d1e;
+      border-radius: 4px;
+      padding: 7px 14px;
+      font-family: inherit;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #8fc96e;
+      cursor: pointer;
+      z-index: 900;
+      transition: background 0.2s;
+    }
+    #download-btn:hover { background: #1a3a14; }
+
+    /* Tooltip on hover */
+    .leaflet-tooltip {
+      background: #0e2010;
+      border: 1px solid #3a6b28;
+      color: #d4e8c2;
+      font-family: 'Georgia', serif;
+      font-size: 0.75rem;
+      padding: 4px 8px;
+      border-radius: 3px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    }
+    .leaflet-tooltip-top::before { border-top-color: #3a6b28; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>MJ Garden Map</h1>
+    <p>Satellite imagery · Tree inventory</p>
+  </div>
+  <p style="font-size:0.68rem; color:#3a5a2a; text-align:right;">
+    Click a tree to view &amp; edit attributes<br>
+    7.5 ft canopy buffer shown
+  </p>
+</header>
+
+<div id="map-container">
+  <div id="loading">
+    <div class="spinner"></div>
+    <p>Loading layers…</p>
+  </div>
+
+  <div id="map"></div>
+
+  <div id="legend">
+    <h4>Legend</h4>
+    <div class="legend-item">
+      <div class="legend-raster" style="background:#3a5a2a;"></div>
+      Satellite imagery
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:rgba(80,200,80,0.25); border:2px solid #50c850;"></div>
+      Tree (7.5 ft buffer)
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="width:8px;height:8px;background:#50c850; margin-left:3px;"></div>
+      Tree point
+    </div>
+  </div>
+
+  <button id="download-btn" onclick="downloadGeoJSON()">⬇ Export GeoJSON</button>
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+// CONFIG
+// ─────────────────────────────────────────────
+const RASTER_FILE  = 'MJ_GardenSat.tif';
+const GEOJSON_FILE = 'MJ_Trees.geojson';
+
+// 7.5 feet in meters (used for the circle buffer)
+const BUFFER_RADIUS_FT = 7.5;
+const FT_TO_M = 0.3048;
+const BUFFER_RADIUS_M = BUFFER_RADIUS_FT * FT_TO_M;  // ≈ 2.286 m
+
+// ─────────────────────────────────────────────
+// MAP INIT  (no basemap tiles)
+// ─────────────────────────────────────────────
+const map = L.map('map', {
+  crs: L.CRS.EPSG3857,
+  zoomControl: true,
+  attributionControl: false,
+  minZoom: 10,
+  maxZoom: 24
+});
+
+// ─────────────────────────────────────────────
+// GeoJSON state (mutable – supports editing)
+// ─────────────────────────────────────────────
+let geojsonData = null;         // raw FeatureCollection
+let treeLayer   = null;         // Leaflet layer group (circles + dots)
+
+// ─────────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────────
+
+/** Build a pretty popup for a feature, with inline editing */
+function buildPopupContent(feature, layerRef) {
+  const props = feature.properties || {};
+  const keys  = Object.keys(props);
+
+  let rows = keys.length
+    ? keys.map(k => `
+        <div class="attr-row">
+          <span class="attr-key">${k}</span>
+          <span class="attr-val" id="val-${k}">${props[k] ?? '—'}</span>
+        </div>`).join('')
+    : '<div class="attr-row" style="color:#5a7a4a">No attributes</div>';
+
+  let editFields = keys.map(k => `
+    <label>${k}</label>
+    <input id="inp-${k}" type="text" value="${props[k] ?? ''}" />`).join('');
+
+  // If no keys yet, add a placeholder new-field option
+  const canEdit = keys.length > 0;
+
+  return `
+    <div class="tree-popup">
+      <h3>🌳 Tree</h3>
+      <div id="attr-view">
+        ${rows}
+        ${canEdit ? `<button class="edit-btn" onclick="toggleEdit(this)">Edit attributes</button>` : ''}
+      </div>
+      ${canEdit ? `
+      <div class="edit-form" id="edit-form" style="display:none">
+        ${editFields}
+        <button class="save-btn" onclick="saveEdit(this)">Save</button>
+      </div>` : ''}
+    </div>`;
+}
+
+window.toggleEdit = function(btn) {
+  const form = btn.closest('.tree-popup').querySelector('#edit-form');
+  form.style.display = form.style.display === 'none' ? 'block' : 'none';
+  btn.textContent = form.style.display === 'none' ? 'Edit attributes' : 'Cancel';
+};
+
+window.saveEdit = function(btn) {
+  const popup   = btn.closest('.tree-popup');
+  const inputs  = popup.querySelectorAll('#edit-form input');
+  // find the marker that owns this popup
+  map.eachLayer(layer => {
+    if (layer.getPopup && layer.getPopup() && layer.getPopup().getContent &&
+        layer.getPopup().getElement && layer.getPopup().getElement()?.contains(btn)) {
+      inputs.forEach(inp => {
+        const key = inp.id.replace('inp-', '');
+        layer.feature.properties[key] = inp.value;
+        const span = popup.querySelector(`#val-${key}`);
+        if (span) span.textContent = inp.value || '—';
+      });
+    }
+  });
+  // also update geojsonData
+  // (the layer reference is captured in the closure below via renderTrees)
+  inputs.forEach(inp => {
+    const key = inp.id.replace('inp-', '');
+    popup.querySelector(`#val-${key}`).textContent = inp.value || '—';
+  });
+  popup.querySelector('#edit-form').style.display = 'none';
+  popup.querySelector('.edit-btn').textContent = 'Edit attributes';
+};
+
+/** Render (or re-render) the tree layer from current geojsonData */
+function renderTrees() {
+  if (treeLayer) map.removeLayer(treeLayer);
+  treeLayer = L.layerGroup();
+
+  L.geoJSON(geojsonData, {
+    pointToLayer: (feature, latlng) => {
+      // Buffer circle
+      const circle = L.circle(latlng, {
+        radius: BUFFER_RADIUS_M,
+        color:  '#50c850',
+        weight: 1.5,
+        opacity: 0.85,
+        fillColor: '#50c850',
+        fillOpacity: 0.18
+      });
+      circle.feature = feature;  // attach so saveEdit can mutate
+
+      // Dot
+      const dot = L.circleMarker(latlng, {
+        radius: 4,
+        color: '#50c850',
+        weight: 1.5,
+        fillColor: '#7de87d',
+        fillOpacity: 0.9
+      });
+      dot.feature = feature;
+
+      // Tooltip on hover
+      const label = feature.properties
+        ? (feature.properties.name || feature.properties.Name ||
+           feature.properties.species || feature.properties.type ||
+           feature.properties.id || 'Tree')
+        : 'Tree';
+
+      dot.bindTooltip(String(label), { sticky: true });
+      circle.bindTooltip(String(label), { sticky: true });
+
+      // Popup on click (shared between circle and dot)
+      const popupOpts = { maxWidth: 300, autoPan: true };
+      dot.bindPopup(() => buildPopupContent(feature, dot), popupOpts);
+      circle.bindPopup(() => buildPopupContent(feature, circle), popupOpts);
+
+      treeLayer.addLayer(circle);
+      treeLayer.addLayer(dot);
+
+      return dot; // geoJSON will add dot; circle added manually above
+    }
+  });
+
+  treeLayer.addTo(map);
+}
+
+/** Export the (possibly edited) GeoJSON */
+window.downloadGeoJSON = function() {
+  if (!geojsonData) return;
+  const blob = new Blob([JSON.stringify(geojsonData, null, 2)],
+                        { type: 'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = 'MJ_Trees_edited.geojson';
+  a.click();
+  URL.revokeObjectURL(url);
+};
+
+// ─────────────────────────────────────────────
+// LOAD RASTER
+// ─────────────────────────────────────────────
+async function loadRaster() {
+  const response = await fetch(RASTER_FILE);
+  if (!response.ok) throw new Error(`Could not fetch ${RASTER_FILE}: ${response.status}`);
+  const buffer = await response.arrayBuffer();
+  const georaster = await parseGeoraster(buffer);
+
+  const rasterLayer = new GeoRasterLayer({
+    georaster,
+    opacity: 1,
+    resolution: 256,   // tile resolution; increase for quality (slower)
+    pixelValuesToColorFn: null  // use natural RGB bands if available
+  });
+
+  rasterLayer.addTo(map);
+
+  // Constrain map to raster bounds
+  const bounds = rasterLayer.getBounds();
+  map.fitBounds(bounds);
+  map.setMaxBounds(bounds.pad(0.05));
+
+  return bounds;
+}
+
+// ─────────────────────────────────────────────
+// LOAD GeoJSON
+// ─────────────────────────────────────────────
+async function loadGeoJSON() {
+  const response = await fetch(GEOJSON_FILE);
+  if (!response.ok) throw new Error(`Could not fetch ${GEOJSON_FILE}: ${response.status}`);
+  geojsonData = await response.json();
+  renderTrees();
+}
+
+// ─────────────────────────────────────────────
+// BOOT
+// ─────────────────────────────────────────────
+(async () => {
+  try {
+    await loadRaster();
+    await loadGeoJSON();
+  } catch (err) {
+    console.error(err);
+    document.querySelector('#loading p').textContent =
+      '⚠ Error loading layers. Check console.';
+    document.querySelector('.spinner').style.display = 'none';
+    return;
+  }
+  document.getElementById('loading').style.display = 'none';
+})();
+</script>
+</body>
+</html>
