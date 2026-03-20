@@ -18,9 +18,9 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      font-family: 'Georgia', serif;
-      background: #0d1f0e;
-      color: #d4e8c2;
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      background: #4c8538;
+      color: #e0fac8;
       height: 100vh;
       display: flex;
       flex-direction: column;
@@ -258,7 +258,6 @@ function buildPopupContent(feature, layerRef) {
 
   return `
     <div class="tree-popup">
-      <h3>🌳 Tree</h3>
       <div id="attr-view">
         ${rows}
         ${canEdit ? `<button class="edit-btn" onclick="toggleEdit(this)">Edit</button>` : ''}
