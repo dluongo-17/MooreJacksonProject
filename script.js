@@ -19,7 +19,7 @@ var height = 2000;\
 var bounds = [[0, 0], [height, width]];\
 \
 // add image\
-L.imageOverlay('img/map.png', bounds).addTo(map);\
+L.imageOverlay('img/base.png', bounds).addTo(map);\
 \
 // fit map to image\
 map.fitBounds(bounds);}
