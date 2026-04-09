@@ -5,8 +5,8 @@ var map = L.map('map', {
 });
 
 // 2. Define image size (replace with your map dimensions)
-var width = 3000;   // width of your map.png in pixels
-var height = 2000;  // height of your map.png in pixels
+var width = 2000;   // width of your map.png in pixels
+var height = 4000;  // height of your map.png in pixels
 
 // 3. Define bounds for the image (top-left, bottom-right)
 var bounds = [[0,0],[height, width]];
