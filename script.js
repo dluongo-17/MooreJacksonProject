@@ -9,7 +9,7 @@ var width = 4000;   // width of your map.png in pixels
 var height = 2000;  // height of your map.png in pixels
 
 // 3. Define bounds for the image (top-left, bottom-right)
-var bounds = [[0,0],[height, width]];
+var bounds = [[0,0],[width, height]];
 
 // 4. Add image overlay
 L.imageOverlay('img/map.png', bounds).addTo(map);
