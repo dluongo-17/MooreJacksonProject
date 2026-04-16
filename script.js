@@ -18,7 +18,7 @@ L.imageOverlay('img/map.png', bounds).addTo(map);
 map.fitBounds(bounds);
 
 // 6. Optional: Add a test marker
-fetch('trees.csv')
+fetch('MJTrees.csv')
   .then(response => response.text())
   .then(csvText => {
     const rows = csvText.split('\n').slice(1); // skip header
