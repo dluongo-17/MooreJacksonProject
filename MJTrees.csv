@@ -1,5 +1,5 @@
-ID,Species
-1,Oak
-2,Elm
-3,Spruce
-4,Cherry
+name,x,y,year
+oak,1200,800,1995
+maple,900,1200,2005
+cherry,1500,2000,2018
+elm,1100,900,2011
