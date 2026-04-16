@@ -18,5 +18,26 @@ L.imageOverlay('img/map.png', bounds).addTo(map);
 map.fitBounds(bounds);
 
 // 6. Optional: Add a test marker
-var tree = L.circleMarker([800,1200], { radius:8, color:'green' }).addTo(map);
-tree.bindPopup("<b>Oak Tree</b><br>Planted 1995");
+fetch('trees.csv')
+  .then(response => response.text())
+  .then(csvText => {
+    const rows = csvText.split('\n').slice(1); // skip header
+
+    rows.forEach(row => {
+      const cols = row.split(',');
+
+      const name = cols[0];
+      const x = parseFloat(cols[1]);
+      const y = parseFloat(cols[2]);
+      const year = cols[3];
+
+      if (!isNaN(x) && !isNaN(y)) {
+        var marker = L.circleMarker([y, x], {
+          radius: 8,
+          color: 'green'
+        }).addTo(map);
+
+        marker.bindPopup(`<b>${name}</b><br>Planted ${year}`);
+      }
+    });
+  });
