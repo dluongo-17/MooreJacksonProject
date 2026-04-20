@@ -26,10 +26,10 @@ fetch('MJTrees.csv')
     rows.forEach(row => {
       const cols = row.split(',');
 
-      const name = cols[0];
-      const x = parseFloat(cols[1]);
-      const y = parseFloat(cols[2]);
-      const year = cols[3];
+      const name = cols[1];
+      const x = parseFloat(cols[3]);
+      const y = parseFloat(cols[4]);
+      const year = cols[5];
 
       if (!isNaN(x) && !isNaN(y)) {
         var marker = L.circleMarker([y, x], {
