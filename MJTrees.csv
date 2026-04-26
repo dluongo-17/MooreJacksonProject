@@ -15,14 +15,14 @@ ID,Name (common),Name (latin),x,y,y-inverse
 14,Black Cherry,Prunus serotina,1035,1209,2791
 15,Dawn Redwood,Metasequoia glyptostroboides,1086,1251,2749
 16,Black Cherry,Prunus serotina,445,1215,2785
-17,Mulberry,Morus Sp.,410,1310,2690
-18,Mulberry,Morus Sp.,402,1415,2585
+17,Mulberry,Morus sp.,410,1310,2690
+18,Mulberry,Morus sp.,402,1415,2585
 19,Black Cherry,Prunus serotina,422,1540,2460
 20,Apple,Malus domestica,933,1616,2384
 21,Apple,Malus domestica,1559,1275,2725
 22,Apple,Malus domestica,1547,1399,2601
 23,Fig,Ficus carica,1537,1480,2520
-24,Mulberry,Morus Sp.,1520,1730,2270
+24,Mulberry,Morus sp.,1520,1730,2270
 25,Fig,Ficus carica,1514,1845,2155
 26,Norway Maple,Acer platanoides,440,2004,1996
 27,Norway Maple,Acer platanoides,408,2127,1873
@@ -36,21 +36,21 @@ ID,Name (common),Name (latin),x,y,y-inverse
 35,Apple,Malus domestica,422,2267,1733
 36,Apple,Malus domestica,420,2370,1630
 37,Common Yew,Taxus baccata,413,2516,1484
-38,Mulberry,Morus Sp.,1200,2526,1474
+38,Mulberry,Morus sp.,1200,2526,1474
 39,East Asian Cherry,Prunus serrulata,1544,2386,1614
 40,East Asian Cherry,Prunus serrulata,1535,2563,1437
 41,East Asian Cherry,Prunus serrulata,1529,2740,1260
-42,Mulberry,Morus Sp.,1552,2794,1206
+42,Mulberry,Morus sp.,1552,2794,1206
 43,East Asian Cherry,Prunus serrulata,1526,2928,1072
-44,Apple/Crabapple,Malus Sp.,1516,3019,981
-45,Apple/Crabapple,Malus Sp.,1524,3107,893
-46,Apple/Crabapple,Malus Sp.,1529,3187,813
+44,Apple/Crabapple,Malus sp.,1516,3019,981
+45,Apple/Crabapple,Malus sp.,1524,3107,893
+46,Apple/Crabapple,Malus sp.,1529,3187,813
 47,Guelder Rose,Viburnum opulus,1518,3269,731
 48,Chinese Arborivitae,Platycladus orientalis,1087,2765,1235
 49,Japanese Yew,Taxus cuspidata,1241,2831,1169
 50,Horse Chestnut,Aesculus hippocastanum,862,2807,1193
-51,Prunus,Prunus Sp.,962,2947,1053
-52,Prunus Sp.,Prunus Sp.,1101,3028,972
+51,Prunus,Prunus sp.,962,2947,1053
+52,Prunus Sp.,Prunus sp.,1101,3028,972
 53,Norway Maple,Acer platanoides,1300,3067,933
 54,Silver Maple,Acer saccharinum,1171,3278,722
 55,Peach,Prunus persica,1050,3202,798
@@ -58,4 +58,4 @@ ID,Name (common),Name (latin),x,y,y-inverse
 57,East Asian Cherry,Prunus serrulata,666,3035,965
 58,Japanese Camelia,Camellia japonica,664,2900,1100
 59,East Asian Cherry,Prunus serrulata,506,2750,1250
-60,Mulberry,Morus Sp. ,580,3002,998
+60,Mulberry,Morus sp.,580,3002,998
