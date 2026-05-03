@@ -51,7 +51,7 @@ fetch('MJTrees.csv')
         L.imageOverlay('img/tree.png', imgBounds, {
           pane: 'trees',
           interactive: false,
-          opacity: .6 
+          opacity: .8 
         }).addTo(map);
 
         // --- GREY DOT (INTERACTIVE MARKER) ---
@@ -61,7 +61,7 @@ fetch('MJTrees.csv')
           fillColor: '#333333',
           fillOpacity: 0,
           opacity: 1,
-          weight: 1,
+          weight: 2,
           pane: 'pins'
         }).addTo(map);
 
