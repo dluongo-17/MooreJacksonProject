@@ -20,9 +20,9 @@ map.getPane('pins').style.zIndex = 500;
 
 // Size lookup (in map units now, NOT pixels)
 var sizeMap = {
-  1: 40,
-  2: 70,
-  3: 110
+  1: 200,
+  2: 350,
+  3: 500
 };
 
 fetch('MJTrees.csv')
