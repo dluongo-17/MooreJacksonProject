@@ -42,7 +42,7 @@ fetch('MJTrees.csv')
 
         const customIcon = L.divIcon({
           className: '',
-          html: `<img src="img/marker.png" style="width:${iconSize}px; height:${iconSize}px;">`,
+          html: `<img src="img/tree.png" style="width:${iconSize}px; height:${iconSize}px; opacity:0.7;">`,
           iconAnchor: [iconSize / 2, iconSize / 2],
           popupAnchor: [0, -iconSize / 2]
         });
