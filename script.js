@@ -5,17 +5,27 @@ var map = L.map('map', {
 
 var width = 4000;
 var height = 2000;
-var bounds = [[0,0],[width, height]];
+var bounds = [[0, 0], [width, height]];
 
+// Add base image
 L.imageOverlay('img/map.png', bounds).addTo(map);
 map.fitBounds(bounds);
 
+// --- CREATE PANES FOR LAYER ORDERING ---
+map.createPane('trees');
+map.getPane('trees').style.zIndex = 400;
+
+map.createPane('pins');
+map.getPane('pins').style.zIndex = 500;
+
+// --- SIZE LOOKUP ---
 var sizeMap = {
   1: 35,
   2: 60,
   3: 90
 };
 
+// --- ICON FACTORY ---
 function makeIcon(baseSize) {
   return L.icon({
     iconUrl: 'img/tree.png',
@@ -25,14 +35,15 @@ function makeIcon(baseSize) {
   });
 }
 
+// --- LOAD CSV AND ADD MARKERS ---
 fetch('MJTrees.csv')
   .then(response => response.text())
   .then(csvText => {
     const rows = csvText.split('\n').slice(1);
-    const markers = [];
 
     rows.forEach(row => {
       const cols = row.split(',');
+
       const name = cols[1];
       const x = parseFloat(cols[3]);
       const y = parseFloat(cols[4]);
@@ -42,31 +53,26 @@ fetch('MJTrees.csv')
       if (!isNaN(x) && !isNaN(y)) {
         const baseSize = sizeMap[size] || 32;
 
-        const marker = L.marker([y, x], { icon: makeIcon(baseSize) }).addTo(map);
-        marker.bindPopup(`<b>${name}</b><br>Planted ${year}`);
-        markers.push({ marker, baseSize });
+        // --- TREE ICON (LOWER LAYER) ---
+        const marker = L.marker([y, x], {
+          icon: makeIcon(baseSize),
+          pane: 'trees'
+        }).addTo(map);
 
-        // Pin point on top of PNG marker
+        marker.bindPopup(`<b>${name}</b><br>Planted ${year}`);
+
+        // --- GREY PIN (UPPER LAYER) ---
         const pin = L.circleMarker([y, x], {
           radius: 4,
           color: '#333333',
           fillColor: '#333333',
           fillOpacity: 1,
           opacity: 1,
-          weight: 1
+          weight: 1,
+          pane: 'pins'
         }).addTo(map);
+
         pin.bindPopup(`<b>${name}</b><br>Planted ${year}`);
       }
     });
-
-    function updateMarkerSizes() {
-      const scale = map.getZoomScale(0, map.getZoom());
-      markers.forEach(({ marker, baseSize }) => {
-        const s = Math.round(baseSize * scale);
-        marker.setIcon(makeIcon(s));
-      });
-    }
-
-    map.on('zoom', updateMarkerSizes);
-    updateMarkerSizes();
   });
