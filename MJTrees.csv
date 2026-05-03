@@ -1,61 +1,61 @@
-ID,Name (common),Name (latin),x,y,y-inverse
-1,East Asian Cherry,Prunus serrulata,450,950,3050
-2,Purple Leaf Plum,Prunus x cistena,817,919,3081
-3,Peach,Prunus persica,928,942,3058
-4,Purple Leaf Plum,Prunus x cistena,1057,946,3054
-5,East Asian Cherry,Prunus serrulata,1212,952,3048
-6,Japanese Barberry,Berberis thunbergii,1290,1000,3000
-7,Winged Wahoo,Euonymus alatus,1370,1005,2290
-8,East Asian Cherry,Prunus serrulata,1140,1715,2285
-9,White Spruce,Picea glauca,1520,992,3008
-10,Unknown,Unknown,1540,920,3080
-11,Unknown,Unknown,1600,920,3080
-12,Dawn Redwood,Metasequoia glyptostroboides,1510,1175,2825
-13,Peach,Prunus persica,1205,1104,2896
-14,Black Cherry,Prunus serotina,1035,1209,2791
-15,Dawn Redwood,Metasequoia glyptostroboides,1086,1251,2749
-16,Black Cherry,Prunus serotina,445,1215,2785
-17,Mulberry,Morus sp.,410,1310,2690
-18,Mulberry,Morus sp.,402,1415,2585
-19,Black Cherry,Prunus serotina,422,1540,2460
-20,Apple,Malus domestica,933,1616,2384
-21,Apple,Malus domestica,1559,1275,2725
-22,Apple,Malus domestica,1547,1399,2601
-23,Fig,Ficus carica,1537,1480,2520
-24,Mulberry,Morus sp.,1520,1730,2270
-25,Fig,Ficus carica,1514,1845,2155
-26,Norway Maple,Acer platanoides,440,2004,1996
-27,Norway Maple,Acer platanoides,408,2127,1873
-28,Black Lace Elderberry,Sambucus nigra,710,2212,1788
-29,Dawn Redwood,Metasequoia glyptostroboides,786,2219,1781
-30,Black Lace Elderberry,Sambucus nigra,850,2217,1783
-31,Black Lace Elderberry,Sambucus nigra,957,2224,1776
-32,Peach,Prunus persica,971,2176,1824
-33,Peach,Prunus persica,1089,2170,1830
-34,Sweet Cherry,Prunus avium,1181,2178,1822
-35,Apple,Malus domestica,422,2267,1733
-36,Apple,Malus domestica,420,2370,1630
-37,Common Yew,Taxus baccata,413,2516,1484
-38,Mulberry,Morus sp.,1200,2526,1474
-39,East Asian Cherry,Prunus serrulata,1544,2386,1614
-40,East Asian Cherry,Prunus serrulata,1535,2563,1437
-41,East Asian Cherry,Prunus serrulata,1529,2740,1260
-42,Mulberry,Morus sp.,1552,2794,1206
-43,East Asian Cherry,Prunus serrulata,1526,2928,1072
-44,Apple/Crabapple,Malus sp.,1516,3019,981
-45,Apple/Crabapple,Malus sp.,1524,3107,893
-46,Apple/Crabapple,Malus sp.,1529,3187,813
-47,Guelder Rose,Viburnum opulus,1518,3269,731
-48,Chinese Arborivitae,Platycladus orientalis,1087,2765,1235
-49,Japanese Yew,Taxus cuspidata,1241,2831,1169
-50,Horse Chestnut,Aesculus hippocastanum,862,2807,1193
-51,Prunus,Prunus sp.,962,2947,1053
-52,Prunus Sp.,Prunus sp.,1101,3028,972
-53,Norway Maple,Acer platanoides,1300,3067,933
-54,Silver Maple,Acer saccharinum,1171,3278,722
-55,Peach,Prunus persica,1050,3202,798
-56,Common Lilac,Syringa vulgaris,825,3045,955
-57,East Asian Cherry,Prunus serrulata,666,3035,965
-58,Japanese Camelia,Camellia japonica,664,2900,1100
-59,East Asian Cherry,Prunus serrulata,506,2750,1250
-60,Mulberry,Morus sp.,580,3002,998
+ID,Name (common),Name (latin),x,y,y-inverse,size
+1,East Asian Cherry,Prunus serrulata,450,950,3050,1
+2,Purple Leaf Plum,Prunus x cistena,817,919,3081,1
+3,Peach,Prunus persica,928,942,3058,1
+4,Purple Leaf Plum,Prunus x cistena,1057,946,3054,1
+5,East Asian Cherry,Prunus serrulata,1212,952,3048,1
+6,Japanese Barberry,Berberis thunbergii,1290,1000,3000,1
+7,Winged Wahoo,Euonymus alatus,1370,1005,2290,1
+8,East Asian Cherry,Prunus serrulata,1140,1715,2285,1
+9,White Spruce,Picea glauca,1520,992,3008,1
+10,Unknown,Unknown,1540,920,3080,2
+11,Unknown,Unknown,1600,920,3080,2
+12,Dawn Redwood,Metasequoia glyptostroboides,1510,1175,2825,1
+13,Peach,Prunus persica,1205,1104,2896,1
+14,Black Cherry,Prunus serotina,1035,1209,2791,3
+15,Dawn Redwood,Metasequoia glyptostroboides,1086,1251,2749,1
+16,Black Cherry,Prunus serotina,445,1215,2785,1
+17,Mulberry,Morus sp.,410,1310,2690,1
+18,Mulberry,Morus sp.,402,1415,2585,1
+19,Black Cherry,Prunus serotina,422,1540,2460,1
+20,Apple,Malus domestica,933,1616,2384,1
+21,Apple,Malus domestica,1559,1275,2725,1
+22,Apple,Malus domestica,1547,1399,2601,1
+23,Fig,Ficus carica,1537,1480,2520,1
+24,Mulberry,Morus sp.,1520,1730,2270,2
+25,Fig,Ficus carica,1514,1845,2155,1
+26,Norway Maple,Acer platanoides,440,2004,1996,2
+27,Norway Maple,Acer platanoides,408,2127,1873,2
+28,Black Lace Elderberry,Sambucus nigra,710,2212,1788,1
+29,Dawn Redwood,Metasequoia glyptostroboides,786,2219,1781,1
+30,Black Lace Elderberry,Sambucus nigra,850,2217,1783,1
+31,Black Lace Elderberry,Sambucus nigra,957,2224,1776,1
+32,Peach,Prunus persica,971,2176,1824,1
+33,Peach,Prunus persica,1089,2170,1830,1
+34,Sweet Cherry,Prunus avium,1181,2178,1822,1
+35,Apple,Malus domestica,422,2267,1733,1
+36,Apple,Malus domestica,420,2370,1630,1
+37,Common Yew,Taxus baccata,413,2516,1484,1
+38,Mulberry,Morus sp.,1200,2526,1474,3
+39,East Asian Cherry,Prunus serrulata,1544,2386,1614,1
+40,East Asian Cherry,Prunus serrulata,1535,2563,1437,1
+41,East Asian Cherry,Prunus serrulata,1529,2740,1260,1
+42,Mulberry,Morus sp.,1552,2794,1206,1
+43,East Asian Cherry,Prunus serrulata,1526,2928,1072,1
+44,Apple/Crabapple,Malus sp.,1516,3019,981,1
+45,Apple/Crabapple,Malus sp.,1524,3107,893,1
+46,Apple/Crabapple,Malus sp.,1529,3187,813,1
+47,Guelder Rose,Viburnum opulus,1518,3269,731,1
+48,Chinese Arborivitae,Platycladus orientalis,1087,2765,1235,1
+49,Japanese Yew,Taxus cuspidata,1241,2831,1169,1
+50,Horse Chestnut,Aesculus hippocastanum,862,2807,1193,3
+51,Prunus,Prunus sp.,962,2947,1053,1
+52,Prunus Sp.,Prunus sp.,1101,3028,972,1
+53,Norway Maple,Acer platanoides,1300,3067,933,3
+54,Silver Maple,Acer saccharinum,1171,3278,722,1
+55,Peach,Prunus persica,1050,3202,798,1
+56,Common Lilac,Syringa vulgaris,825,3045,955,1
+57,East Asian Cherry,Prunus serrulata,666,3035,965,1
+58,Japanese Camelia,Camellia japonica,664,2900,1100,1
+59,East Asian Cherry,Prunus serrulata,506,2750,1250,1
+60,Mulberry,Morus sp.,580,3002,998,1
