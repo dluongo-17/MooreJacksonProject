@@ -41,16 +41,25 @@ fetch('MJTrees.csv')
 
       if (!isNaN(x) && !isNaN(y)) {
         const baseSize = sizeMap[size] || 32;
+
         const marker = L.marker([y, x], { icon: makeIcon(baseSize) }).addTo(map);
         marker.bindPopup(`<b>${name}</b><br>Planted ${year}`);
         markers.push({ marker, baseSize });
+
+        // Pin point on top of PNG marker
+        const pin = L.circleMarker([y, x], {
+          radius: 4,
+          color: '#333333',
+          fillColor: '#333333',
+          fillOpacity: 1,
+          opacity: 1,
+          weight: 1
+        }).addTo(map);
+        pin.bindPopup(`<b>${name}</b><br>Planted ${year}`);
       }
     });
 
     function updateMarkerSizes() {
-      // getZoomScale returns the scale factor between two zoom levels
-      // We want markers to appear the same size regardless of zoom,
-      // so we divide baseSize by the current scale relative to zoom 0
       const scale = map.getZoomScale(0, map.getZoom());
       markers.forEach(({ marker, baseSize }) => {
         const s = Math.round(baseSize * scale);
@@ -59,5 +68,5 @@ fetch('MJTrees.csv')
     }
 
     map.on('zoom', updateMarkerSizes);
-    updateMarkerSizes(); // run once on load
+    updateMarkerSizes();
   });
