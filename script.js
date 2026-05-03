@@ -7,35 +7,24 @@ var width = 4000;
 var height = 2000;
 var bounds = [[0, 0], [width, height]];
 
-// Add base image
+// Base map
 L.imageOverlay('img/map.png', bounds).addTo(map);
 map.fitBounds(bounds);
 
-// --- CREATE PANES FOR LAYER ORDERING ---
+// Panes for layering
 map.createPane('trees');
 map.getPane('trees').style.zIndex = 400;
 
 map.createPane('pins');
 map.getPane('pins').style.zIndex = 500;
 
-// --- SIZE LOOKUP ---
+// Size lookup (in map units now, NOT pixels)
 var sizeMap = {
-  1: 35,
-  2: 60,
-  3: 90
+  1: 40,
+  2: 70,
+  3: 110
 };
 
-// --- ICON FACTORY ---
-function makeIcon(baseSize) {
-  return L.icon({
-    iconUrl: 'img/tree.png',
-    iconSize: [baseSize, baseSize],
-    iconAnchor: [baseSize / 2, baseSize / 2],
-    popupAnchor: [0, -baseSize / 2]
-  });
-}
-
-// --- LOAD CSV AND ADD MARKERS ---
 fetch('MJTrees.csv')
   .then(response => response.text())
   .then(csvText => {
@@ -51,17 +40,20 @@ fetch('MJTrees.csv')
       const size = parseInt(cols[6]);
 
       if (!isNaN(x) && !isNaN(y)) {
-        const baseSize = sizeMap[size] || 32;
+        const s = sizeMap[size] || 35;
 
-        // --- TREE ICON (LOWER LAYER) ---
-        const marker = L.marker([y, x], {
-          icon: makeIcon(baseSize),
-          pane: 'trees'
+        // --- TREE IMAGE (NON-INTERACTIVE, SCALES WITH MAP) ---
+        const imgBounds = [
+          [y - s / 2, x - s / 2],
+          [y + s / 2, x + s / 2]
+        ];
+
+        L.imageOverlay('img/tree.png', imgBounds, {
+          pane: 'trees',
+          interactive: false
         }).addTo(map);
 
-        marker.bindPopup(`<b>${name}</b><br>Planted ${year}`);
-
-        // --- GREY PIN (UPPER LAYER) ---
+        // --- GREY DOT (INTERACTIVE MARKER) ---
         const pin = L.circleMarker([y, x], {
           radius: 4,
           color: '#333333',
