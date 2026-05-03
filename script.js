@@ -58,7 +58,7 @@ fetch('MJTrees.csv')
           radius: 4,
           color: '#333333',
           fillColor: '#333333',
-          fillOpacity: 1,
+          fillOpacity: 0,
           opacity: 1,
           weight: 1,
           pane: 'pins'
