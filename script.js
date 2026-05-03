@@ -35,7 +35,6 @@ fetch('MJTrees.csv')
 
       const name = cols[1];
       const latin = cols[2];
-      latin.style.fontStyle = "italic";
       const x = parseFloat(cols[3]);
       const y = parseFloat(cols[4]);
       const native = cols[7];
@@ -68,7 +67,7 @@ fetch('MJTrees.csv')
           pane: 'pins'
         }).addTo(map);
 
-        pin.bindPopup(`<b>${name}</b><br>${latin}</b><br>"Native: "${native}</b><br>"Edible: "${edible}`);
+        pin.bindPopup(`<b>${name}</b><br><i>${latin}<i></b><br>Native: ${native}</b><br>Edible: ${edible}`);
       }
     });
   });
