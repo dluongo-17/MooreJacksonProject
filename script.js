@@ -40,11 +40,11 @@ fetch('MJTrees.csv')
       if (!isNaN(x) && !isNaN(y)) {
         const iconSize = sizeMap[size] || 32; // fallback if size is missing/invalid
 
-        const customIcon = L.icon({
-          iconUrl: 'img/tree.png',       // 👈 path to your PNG
-          iconSize: [iconSize, iconSize],  // square icon scaled by size
-          iconAnchor: [iconSize / 2, iconSize / 2], // centered on the point
-          popupAnchor: [0, -iconSize / 2]  // popup appears above the icon
+        const customIcon = L.divIcon({
+          className: '',
+          html: `<img src="img/marker.png" style="width:${iconSize}px; height:${iconSize}px;">`,
+          iconAnchor: [iconSize / 2, iconSize / 2],
+          popupAnchor: [0, -iconSize / 2]
         });
 
         var marker = L.marker([y, x], { icon: customIcon }).addTo(map);
