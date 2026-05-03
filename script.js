@@ -67,7 +67,7 @@ fetch('MJTrees.csv')
           pane: 'pins'
         }).addTo(map);
 
-        pin.bindPopup(`<b>${name}</b><br><i>${latin}<i></b><br>Native: ${native}</b><br>Edible: ${edible}`);
+        pin.bindPopup(`<b>${name}</b><br><i>${latin}</i></b><br>Native: ${native}</b><br>Edible: ${edible}`);
       }
     });
   });
