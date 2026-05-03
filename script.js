@@ -34,9 +34,12 @@ fetch('MJTrees.csv')
       const cols = row.split(',');
 
       const name = cols[1];
+      const latin = cols[2];
+      latin.style.fontStyle = "italic";
       const x = parseFloat(cols[3]);
       const y = parseFloat(cols[4]);
-      const year = cols[5];
+      const native = cols[7];
+      const edible = cols[8];
       const size = parseInt(cols[6]);
 
       if (!isNaN(x) && !isNaN(y)) {
@@ -65,7 +68,7 @@ fetch('MJTrees.csv')
           pane: 'pins'
         }).addTo(map);
 
-        pin.bindPopup(`<b>${name}</b><br>Planted ${year}`);
+        pin.bindPopup(`<b>${name}</b><br>${latin}</b><br>"Native: "${native}</b><br>"Edible: "${edible}`);
       }
     });
   });
