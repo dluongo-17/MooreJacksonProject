@@ -14,10 +14,10 @@ ID,Name (common),Name (latin),x,y,y-inverse,size
 13,Peach,Prunus persica,1205,1104,2896,1
 14,Black Cherry,Prunus serotina,1035,1209,2791,3
 15,Dawn Redwood,Metasequoia glyptostroboides,1086,1251,2749,1
-16,Black Cherry,Prunus serotina,445,1215,2785,1
+16,Black Cherry,Prunus serotina,445,1215,2785,2
 17,Mulberry,Morus sp.,410,1310,2690,1
 18,Mulberry,Morus sp.,402,1415,2585,1
-19,Black Cherry,Prunus serotina,422,1540,2460,1
+19,Black Cherry,Prunus serotina,422,1540,2460,2
 20,Apple,Malus domestica,933,1616,2384,1
 21,Apple,Malus domestica,1559,1275,2725,1
 22,Apple,Malus domestica,1547,1399,2601,1
